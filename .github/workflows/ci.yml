@@ -72,12 +72,27 @@ jobs:
           bun-version: ${{ matrix.bun }}
           distribution-directory: ${{ runner.temp }}/distribution
           source-commit: ab6d35eb7c39369b1c2491c4b94c20e656b4548b
+      - name: Prepare distribution without provenance
+        run: |
+          cp -R "$RUNNER_TEMP/distribution" "$RUNNER_TEMP/checksum-only"
+          rm "$RUNNER_TEMP/checksum-only/PROVENANCE.jsonl"
+      - name: Reject missing provenance by default
+        id: missing-provenance
+        continue-on-error: true
+        uses: ./
+        with:
+          bun-version: ${{ matrix.bun }}
+          distribution-directory: ${{ runner.temp }}/checksum-only
+      - name: Verify missing provenance rejection
+        env:
+          OUTCOME: ${{ steps.missing-provenance.outcome }}
+        run: test "$OUTCOME" = failure
       - name: Install with checksum verification only
         id: checksum-only
         uses: ./
         with:
           bun-version: ${{ matrix.bun }}
-          distribution-directory: ${{ runner.temp }}/distribution
+          distribution-directory: ${{ runner.temp }}/checksum-only
           verify-attestation: 'false'
       - name: Verify checksum-only installation
         env:
