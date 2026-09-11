@@ -56,6 +56,7 @@ jobs:
         continue-on-error: true
         uses: ./
         with:
+          bun-version: ${{ matrix.bun }}
           source-commit: 965bbce218c935e29cfb2d87e00b733dbcbf86b1
       - name: Verify rejection
         env:
@@ -68,12 +69,14 @@ jobs:
       - name: Install local distribution
         uses: ./
         with:
+          bun-version: ${{ matrix.bun }}
           distribution-directory: ${{ runner.temp }}/distribution
           source-commit: ab6d35eb7c39369b1c2491c4b94c20e656b4548b
       - name: Install with checksum verification only
         id: checksum-only
         uses: ./
         with:
+          bun-version: ${{ matrix.bun }}
           distribution-directory: ${{ runner.temp }}/distribution
           verify-attestation: 'false'
       - name: Verify checksum-only installation
@@ -89,6 +92,7 @@ jobs:
         continue-on-error: true
         uses: ./
         with:
+          bun-version: ${{ matrix.bun }}
           distribution-directory: ${{ runner.temp }}/distribution
       - name: Verify checksum rejection
         env:
