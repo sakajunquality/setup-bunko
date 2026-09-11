@@ -82,3 +82,13 @@ jobs:
         env:
           OUTCOME: ${{ steps.corrupt.outcome }}
         run: test "$OUTCOME" = failure
+  required:
+    name: Consumer tests
+    if: always()
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - env:
+          RESULT: ${{ needs.test.result }}
+        run: test "$RESULT" = success
