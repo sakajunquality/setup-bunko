@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [main, feat/setup-action]
+    branches: [main]
     tags: ['v*']
   pull_request:
   workflow_dispatch:
@@ -70,6 +70,18 @@ jobs:
         with:
           distribution-directory: ${{ runner.temp }}/distribution
           source-commit: ab6d35eb7c39369b1c2491c4b94c20e656b4548b
+      - name: Install with checksum verification only
+        id: checksum-only
+        uses: ./
+        with:
+          distribution-directory: ${{ runner.temp }}/distribution
+          verify-attestation: 'false'
+      - name: Verify checksum-only installation
+        env:
+          INSTALLED_VERSION: ${{ steps.checksum-only.outputs.version }}
+        run: |
+          test "$INSTALLED_VERSION" = 0.6.2
+          test "$(bunko version)" = 0.6.2
       - name: Corrupt local payload
         run: printf '\n' >> "$RUNNER_TEMP/distribution/bunko.js"
       - name: Reject corrupt distribution

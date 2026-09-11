@@ -31,7 +31,7 @@ The default CLI supports Bun >=1.3.13 and <1.5. Older explicitly selected CLI ve
 | `repository` | `sakajunquality/bunko` | Trusted GitHub.com repository hosting compatible release assets. |
 | `token` | `${{ github.token }}` | Token with read access to release assets and attestations. |
 | `verify-attestation` | `true` | Verify release provenance and version-tag identity before execution; requires `gh`. |
-| `source-commit` | Empty | Optional full source commit digest required by provenance verification. Requires `verify-attestation: 'true'`. |
+| `source-commit` | Empty | Optional full source commit digest to constrain provenance verification. Requires `verify-attestation: 'true'`. |
 | `distribution-directory` | Empty | Local directory with `bunko.js`, `LICENSE`, `THIRD_PARTY_NOTICES.md`, and `SHA256SUMS`; also requires `PROVENANCE.jsonl` when attestation verification is enabled. |
 
 Normal public-release installation uses `contents: read`. A custom private release repository may require a separate token scoped to that repository. Never put credentials directly in workflow files.

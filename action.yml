@@ -1,5 +1,5 @@
 name: Setup bunko
-description: Install Bun and a checksum-verified bunko release on Linux or macOS
+description: Install Bun and a checksum- and provenance-verified bunko CLI on Linux and macOS
 branding:
   icon: download
   color: purple
