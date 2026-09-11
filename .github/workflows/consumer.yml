@@ -1,0 +1,24 @@
+name: Published consumer
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  consume:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Install published Action without a repository checkout
+        id: setup
+        uses: sakajunquality/setup-bunko@v0.1.0
+      - name: Verify default release and executable output
+        env:
+          INSTALLED_VERSION: ${{ steps.setup.outputs.version }}
+          EXECUTABLE: ${{ steps.setup.outputs.bunko-path }}
+        run: |
+          test "$INSTALLED_VERSION" = 0.6.2
+          test "$(bunko version)" = 0.6.2
+          test "$("$EXECUTABLE" version)" = 0.6.2
