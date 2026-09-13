@@ -13,12 +13,12 @@ jobs:
     steps:
       - name: Install published Action without a repository checkout
         id: setup
-        uses: sakajunquality/setup-bunko@v0.1.0
+        uses: sakajunquality/setup-bunko@v0.1.1
       - name: Verify default release and executable output
         env:
           INSTALLED_VERSION: ${{ steps.setup.outputs.version }}
           EXECUTABLE: ${{ steps.setup.outputs.bunko-path }}
         run: |
-          test "$INSTALLED_VERSION" = 0.6.2
-          test "$(bunko version)" = 0.6.2
-          test "$("$EXECUTABLE" version)" = 0.6.2
+          test "$INSTALLED_VERSION" = 0.8.0
+          test "$(bunko version)" = 0.8.0
+          test "$("$EXECUTABLE" version)" = 0.8.0
