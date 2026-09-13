@@ -8,13 +8,13 @@ permissions:
 
 steps:
   - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-  - uses: sakajunquality/setup-bunko@v0.1.0
+  - uses: sakajunquality/setup-bunko@v0.1.1
     with:
-      version: v0.6.2
+      version: v0.8.0
   - run: bunko version
 ```
 
-For immutable workflow dependencies, replace `v0.1.0` with its full commit SHA from the release page. Full version tags are protected against updates and deletion. There are no floating major-version tags.
+For immutable workflow dependencies, replace `v0.1.1` with its full commit SHA from the release page. Full version tags are protected against updates and deletion. There are no floating major-version tags.
 
 ## Requirements
 
@@ -26,7 +26,7 @@ The default CLI supports Bun >=1.3.13 and <1.5. Older explicitly selected CLI ve
 
 | Input | Default | Purpose |
 | --- | --- | --- |
-| `version` | `v0.6.2` | Full CLI release version, independent of this Action's version. |
+| `version` | `v0.8.0` | Full CLI release version, independent of this Action's version. |
 | `bun-version` | `1.4.2` | Bun version installed by setup-bun. |
 | `repository` | `sakajunquality/bunko` | Trusted GitHub.com repository hosting compatible release assets. |
 | `token` | `${{ github.token }}` | Token with read access to release assets and attestations. |
@@ -50,8 +50,8 @@ The Action adds `bunko` to `PATH` for subsequent steps. It installs into a tempo
 After setup, use the CLI or the [companion build Action](https://github.com/sakajunquality/bunko/tree/main/build):
 
 ```yaml
-- uses: sakajunquality/setup-bunko@v0.1.0
-- uses: sakajunquality/bunko/build@ab6d35eb7c39369b1c2491c4b94c20e656b4548b # v0.6.2
+- uses: sakajunquality/setup-bunko@v0.1.1
+- uses: sakajunquality/bunko/build@9ec19b72a2ef8b65d3933154484a7de5b301a620 # v0.8.0
   with:
     path: .
     push: 'false'
@@ -61,7 +61,7 @@ Registry authentication and publishing are separate steps. See the [bunko docume
 
 ## Maintenance and releases
 
-This composite Action forwards all inputs and outputs to the existing bunko installer, pinned to `ab6d35eb7c39369b1c2491c4b94c20e656b4548b` (v0.6.2). It contains no duplicate installer implementation. Its release number is independent of the CLI: Action v0.1.0 installs CLI v0.6.2 by default, and overriding `version` does not inherit a fixed source digest.
+This composite Action forwards all inputs and outputs to the existing bunko installer, pinned to `9ec19b72a2ef8b65d3933154484a7de5b301a620` (v0.8.0). It contains no duplicate installer implementation. Its release number is independent of the CLI: Action v0.1.1 installs CLI v0.8.0 by default, and overriding `version` does not inherit a fixed source digest.
 
 Updates must check input/output parity against the pinned upstream metadata and pass Linux/macOS consumer tests, including version overrides, PATH/outputs, local distributions, checksum rejection, and incorrect source identity rejection. Review the implementation pin, CLI default, README, and tests together. Publish a new full Action version after CI succeeds; do not move an existing release tag. This repository does not publish CLI, npm, or container artifacts.
 

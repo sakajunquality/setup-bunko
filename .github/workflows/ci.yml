@@ -32,7 +32,7 @@ jobs:
           EXECUTABLE: ${{ steps.default.outputs.bunko-path }}
           EXPECTED_BUN: ${{ matrix.bun }}
         run: |
-          test "$INSTALLED_VERSION" = 0.6.2
+          test "$INSTALLED_VERSION" = 0.8.0
           test "$(bunko version)" = "$INSTALLED_VERSION"
           test "$("$EXECUTABLE" version)" = "$INSTALLED_VERSION"
           test "$(bun --version)" = "$EXPECTED_BUN"
@@ -65,13 +65,13 @@ jobs:
       - name: Download local distribution
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release download v0.6.2 --repo sakajunquality/bunko --dir "$RUNNER_TEMP/distribution"
+        run: gh release download v0.8.0 --repo sakajunquality/bunko --dir "$RUNNER_TEMP/distribution"
       - name: Install local distribution
         uses: ./
         with:
           bun-version: ${{ matrix.bun }}
           distribution-directory: ${{ runner.temp }}/distribution
-          source-commit: ab6d35eb7c39369b1c2491c4b94c20e656b4548b
+          source-commit: 9ec19b72a2ef8b65d3933154484a7de5b301a620
       - name: Prepare distribution without provenance
         run: |
           cp -R "$RUNNER_TEMP/distribution" "$RUNNER_TEMP/checksum-only"
@@ -98,8 +98,8 @@ jobs:
         env:
           INSTALLED_VERSION: ${{ steps.checksum-only.outputs.version }}
         run: |
-          test "$INSTALLED_VERSION" = 0.6.2
-          test "$(bunko version)" = 0.6.2
+          test "$INSTALLED_VERSION" = 0.8.0
+          test "$(bunko version)" = 0.8.0
       - name: Corrupt local payload
         run: printf '\n' >> "$RUNNER_TEMP/distribution/bunko.js"
       - name: Reject corrupt distribution
