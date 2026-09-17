@@ -8,25 +8,37 @@ permissions:
 
 steps:
   - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-  - uses: sakajunquality/setup-bunko@v0.1.1
+  - uses: sakajunquality/setup-bunko@v0.2.0
     with:
-      version: v0.10.0
+      version: v0.12.0
   - run: bunko version
 ```
 
-For immutable workflow dependencies, replace `v0.1.1` with its full commit SHA from the release page. Full version tags are protected against updates and deletion. There are no floating major-version tags.
+For immutable workflow dependencies, replace `v0.2.0` with its full commit SHA from the release page. Full version tags are protected against updates and deletion. There are no floating major-version tags.
+
+## Following the latest stable CLI
+
+```yaml
+- uses: sakajunquality/setup-bunko@v0.2.0
+  with:
+    version: latest
+```
+
+`latest` is opt-in. The default stays pinned to v0.12.0 for reproducibility. GitHub's latest published stable release in `repository` is resolved once per installation; checksums and signed provenance are verified against that concrete tag before execution. The `version` output reports the concrete installed version. This follows GitHub's latest-release designation, not npm dist-tags or the numerically highest tag.
+
+There is no persistent CLI cache. A missing/invalid latest release fails without falling back. `distribution-directory` requires an explicit version and cannot be combined with `latest`. If you set `source-commit`, it must match the resolved release. An automatically selected future CLI may require a newer `bun-version`; runtime compatibility is not bypassed. Pin the CLI version and Action commit for reproducible builds.
 
 ## Requirements
 
 GitHub-hosted Ubuntu and macOS runners are tested with Bun 1.3.13 and 1.4.2. Windows is unsupported. Self-hosted runners need Bash, the prerequisites of [setup-bun](https://github.com/oven-sh/setup-bun), and a recent GitHub CLI (`gh`) supporting `gh attestation verify`. Network access to GitHub.com release assets, attestations, and Bun downloads is required. Release repositories hosted on GitHub Enterprise Server are not supported.
 
-The default CLI supports Bun >=1.3.13 and <1.5. Older explicitly selected CLI versions have their own runtime requirements. Docker is not needed to install bunko; individual build features may have additional requirements.
+The default CLI supports Bun >=1.3.13 <1.4 or >=1.4.2 <1.5. Older explicitly selected CLI versions have their own runtime requirements. Docker is not needed to install bunko; individual build features may have additional requirements.
 
 ## Inputs
 
 | Input | Default | Purpose |
 | --- | --- | --- |
-| `version` | `v0.10.0` | Full CLI release version, independent of this Action's version. |
+| `version` | `v0.12.0` | Full CLI release version or `latest`, independent of this Action's version. |
 | `bun-version` | `1.4.2` | Bun version installed by setup-bun. |
 | `repository` | `sakajunquality/bunko` | Trusted GitHub.com repository hosting compatible release assets. |
 | `token` | `${{ github.token }}` | Token with read access to release assets and attestations. |
@@ -50,10 +62,10 @@ The Action adds `bunko` to `PATH` for subsequent steps. It installs into a tempo
 After setup, use the CLI or the [companion build Action](https://github.com/sakajunquality/bunko/tree/main/build):
 
 ```yaml
-- uses: sakajunquality/setup-bunko@v0.1.1
+- uses: sakajunquality/setup-bunko@v0.2.0
   with:
-    version: v0.10.0
-- uses: sakajunquality/bunko/build@8a8a26ad8c1b2a79ab75603dbb5109f10f18f266 # v0.10.0
+    version: v0.12.0
+- uses: sakajunquality/bunko/build@77b4116069e1853439ca1b2e00a8e7d2a0aa00e0 # v0.12.0
   with:
     path: .
     push: 'false'
@@ -63,7 +75,7 @@ Registry authentication and publishing are separate steps. See the [bunko docume
 
 ## Maintenance and releases
 
-This composite Action forwards all inputs and outputs to the existing bunko installer, pinned to `8a8a26ad8c1b2a79ab75603dbb5109f10f18f266` (v0.10.0). It contains no duplicate installer implementation. Its release number is independent of the CLI. Development main now defaults to CLI v0.10.0; the immutable published Action v0.1.1 still defaults to v0.8.0, so the examples explicitly select v0.10.0. Overriding `version` does not inherit a fixed source digest. A new Action release is required to publish this changed default.
+This composite Action forwards all inputs and outputs to the existing bunko installer, pinned to `4863326faf8db67779f479c7fde8365b89eb162a` (the reviewed latest-capable installer). It contains no duplicate installer implementation. Its release number is independent of the CLI. Action v0.2.0 defaults to CLI v0.12.0. Earlier immutable Action v0.1.1 still defaults to v0.8.0. Overriding `version` does not inherit a fixed source digest.
 
 Updates must check input/output parity against the pinned upstream metadata and pass Linux/macOS consumer tests, including version overrides, PATH/outputs, local distributions, checksum rejection, and incorrect source identity rejection. Review the implementation pin, CLI default, README, and tests together. Publish a new full Action version after CI succeeds; do not move an existing release tag. This repository does not publish CLI, npm, or container artifacts.
 

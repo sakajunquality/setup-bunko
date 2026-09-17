@@ -1,3 +1,4 @@
+# Deliberately exercise the protected published tag; see the narrow exception in SECURITY.md.
 name: Published consumer
 on:
   workflow_dispatch:
@@ -13,12 +14,25 @@ jobs:
     steps:
       - name: Install published Action without a repository checkout
         id: setup
-        uses: sakajunquality/setup-bunko@v0.1.1
+        uses: sakajunquality/setup-bunko@v0.2.0
       - name: Verify default release and executable output
         env:
           INSTALLED_VERSION: ${{ steps.setup.outputs.version }}
           EXECUTABLE: ${{ steps.setup.outputs.bunko-path }}
         run: |
-          test "$INSTALLED_VERSION" = 0.8.0
-          test "$(bunko version)" = 0.8.0
-          test "$("$EXECUTABLE" version)" = 0.8.0
+          test "$INSTALLED_VERSION" = 0.12.0
+          test "$(bunko version)" = 0.12.0
+          test "$("$EXECUTABLE" version)" = 0.12.0
+      - name: Install latest stable CLI through the published Action
+        id: latest
+        uses: sakajunquality/setup-bunko@v0.2.0
+        with:
+          version: latest
+      - name: Verify resolved latest version
+        env:
+          INSTALLED_VERSION: ${{ steps.latest.outputs.version }}
+          EXECUTABLE: ${{ steps.latest.outputs.bunko-path }}
+        run: |
+          test "$INSTALLED_VERSION" != latest
+          test "$(bunko version)" = "$INSTALLED_VERSION"
+          test "$("$EXECUTABLE" version)" = "$INSTALLED_VERSION"
