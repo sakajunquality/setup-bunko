@@ -1,3 +1,4 @@
+# Deliberately exercise the protected published tag; see the narrow exception in SECURITY.md.
 name: Published consumer
 on:
   workflow_dispatch:
