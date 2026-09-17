@@ -16,7 +16,7 @@ assert.deepEqual(Object.keys(action.outputs).sort(), Object.keys(upstream.output
 for (const name of Object.keys(action.outputs)) {
   assert.equal(action.outputs[name].value, "${{ steps.install.outputs." + name + " }}");
 }
-assert.equal(action.inputs.version.default, "v0.10.0");
+assert.equal(action.inputs.version.default, "v0.12.0");
 assert.equal(action.inputs["verify-attestation"].default, "true");
 assert.equal(action.inputs["source-commit"].default, undefined);
 console.log("Pinned upstream contract and all input/output forwarding verified.");
